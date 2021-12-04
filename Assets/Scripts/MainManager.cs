@@ -12,6 +12,7 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
+    [SerializeField] Text bestScoreText;
     
     private bool m_Started = false;
     private int m_Points;
@@ -36,6 +37,8 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        bestScoreText.text = "Best Score : " + GameManager.Instance.PlayerName + " : " + GameManager.Instance.BestScore;
     }
 
     private void Update()
@@ -72,5 +75,16 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        if(m_Points > GameManager.Instance.BestScore)
+        {
+            GameManager.Instance.PlayerName = GameManager.Instance.CurrentPlayerName;
+            GameManager.Instance.BestScore = m_Points;
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        GameManager.Instance.SavePlayerNameAndBestScore();
     }
 }
